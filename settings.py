@@ -47,12 +47,12 @@ settings = {
     "www.24tv.ua":
     {
         "articles_list_by_day_template": "https://24tv.ua/archive/{date}/index.html",
-        "articles_list_content_blocks_template": "div.content-blocks",
-        "article_link_template": "ul.list",
+        "articles_list_content_blocks_template": "div.news-list.category_list.b_video",
+        "article_link_template": "li a.news_title",
         "date_template": "%d_%B_%Y",
         # "pages_template" : "div.col-12",
         "article_title_template": "h1.article_title",
-        "article_publication_datetime": "h1.article_title div span:date",
+        "article_publication_datetime": "div.news-info-big span.date",
         "article_text_template": "div.news_text",
         "tags_template2": "div.tags a",  # loop through a
         "tags_template": "",

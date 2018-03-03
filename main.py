@@ -118,9 +118,10 @@ class Site():
         a_tags = q(article_template)
         urls = []
         for a in a_tags:
-            urls.append(a.attrib['href'])
 
-        urls = ['https://' + self.domain_name + url if 'https://' not in url else url for url in urls ]
+            urls.append("".join([a.base, a.attrib['href']]))
+
+        # urls = ['https://' + self.domain_name + url if 'https://' not in url else url for url in urls ]
         return urls
 
     def getlinks(self, remember = False):
@@ -209,6 +210,7 @@ class Site():
         print("Title", title)
 
         pub_tag = q(self.templates['article_publication_datetime'])
+        print("here", pub_tag.text())
         if len(pub_tag) > 0:
             pub_tag = pub_tag[0]
 

@@ -26,9 +26,9 @@ from datetime import date
 #         p.print_summary()
 
 class TestSite(unittest.TestCase):
-    def test_getlinks(self):
-        site = Site('test_inputs/input3')
-        site.getlinks()
+    # def test_getlinks(self):
+    #     site = Site('test_inputs/input3')
+    #     site.getlinks()
 
     # def test_get_articles_urls(self):
     #     site = Site('test_inputs/input1')
@@ -41,9 +41,9 @@ class TestSite(unittest.TestCase):
     #     site.getlinks()
     #     print(site.start_date)
 
-    # def test_articles(self):
-    #     site = recall_site()
-    #     site.getarticles()
+    def test_articles(self):
+        site = recall_site()
+        site.getarticles()
 
     # def test_get_article(self):
     #     site = recall_site()
