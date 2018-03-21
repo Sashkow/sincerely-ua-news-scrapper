@@ -95,14 +95,14 @@ settings = {
        "article_text_template" : "div.article-body",
        "tags_template2" : "div.tags", #loop through a
        "tags_template": "",
-   }
+   },
    "www.censor.net.ua":
     {
        "articles_list_by_day_template" : "https://censor.net.ua/news/all/page/{page_number}/archive/{date}/category/0/sortby/date",
        "articles_list_content_blocks_template" : "div.curpane",
        "article_link_template" : "h3 a",
        "date_template" : "%Y-%m-%d",
-      # "pages_template" : "div.col-12",
+       "pages_template" : "table.pag_table td a:not([class]):last",
        "article_title_template" : "h1.entry-title",
        "article_publication_datetime" : "time.published.dateline",
        "article_text_template" : "div.text",
@@ -156,7 +156,7 @@ settings = {
         "articles_list_content_blocks_template" : "ul.news-list",
         "article_link_template" : "li p a",
         "date_template" : "%Y-%m-%d",
-        "pages_template" : "ul.pagination [class!="next"] li:last", 
+        "pages_template" : "ul.pagination [class!='next'] li:last",
         "article_title_template" : "div.b-center-item-head-info h1",
         "article_publication_datetime" : "div.meta-info div.time",
         "article_text_template" : "h3.article-lead, div.article-text",
@@ -165,7 +165,8 @@ settings = {
         #"news_keywords": "meta[name=news_keywords]" 
     },
  
-    "www.gazeta.ua"{
+    "www.gazeta.ua":
+    {
         "articles_list_by_day_template" : "https://gazeta.ua/news/{date}/", # concatenating #100 to the url does not change news displayed and sometimes leads to no news displayed at all or even 404
         "articles_list_content_blocks_template" : "div.news-wrapper",
         "article_link_template" : "a.news-title.block.black.fs16.mb5",

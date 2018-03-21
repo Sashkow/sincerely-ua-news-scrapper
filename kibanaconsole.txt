@@ -1,0 +1,14 @@
+PUT news
+{
+  "mappings": {
+    "article": {
+      "properties": {
+        "pubdate": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ssZ"
+
+        }
+      }
+    }
+  }
+}

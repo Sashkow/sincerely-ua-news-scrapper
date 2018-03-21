@@ -117,9 +117,12 @@ class Site():
         q = pq(link_to_links)(self.templates['articles_list_content_blocks_template'])
         a_tags = q(article_template)
         urls = []
-        for a in a_tags:
 
-            urls.append("".join([a.base, a.attrib['href']]))
+        for a in a_tags:
+            if ('https://' in a.attrib['href']) or ('http://' in a.attrib['href']):
+                urls.append(a.attrib['href'])
+            else:
+                urls.append("".join([a.base, a.attrib['href']]))
 
         # urls = ['https://' + self.domain_name + url if 'https://' not in url else url for url in urls ]
         return urls
@@ -150,8 +153,15 @@ class Site():
 
                         starting_link_to_links = articles_list_url.format(date=day.strftime(date_template),
                                                                           page_number=str(1))
+
                         q = pq(starting_link_to_links)
-                        max_pages = int(q(self.templates["pages_template"]).text())
+                        pages_tags = q(self.templates["pages_template"])
+
+                        if len(pages_tags) == 0:
+                            max_pages = 2
+                        else:
+                            print("here", starting_link_to_links)
+                            max_pages = int(pages_tags.text().split(" ")[0])
                     else:
                         max_pages = 20
                     print("MaxPages:", max_pages)

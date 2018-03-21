@@ -27,7 +27,7 @@ from datetime import date
 
 class TestSite(unittest.TestCase):
     # def test_getlinks(self):
-    #     site = Site('test_inputs/input3')
+    #     site = Site('test_inputs/input_telegraf')
     #     site.getlinks()
 
     # def test_get_articles_urls(self):
