@@ -29,9 +29,9 @@ with open('parties', 'r') as f:
 
 
 from elasticsearch import Elasticsearch
-es = Elasticsearch(['https://elastic:oESru8NqPaZePrEZNQyb@localhost:443'])
+# es = Elasticsearch(['https://elastic:oESru8NqPaZePrEZNQyb@localhost:443'])
 
-# es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 
 import requests
 
@@ -231,29 +231,8 @@ class Site():
         for link in links:
             article = self.getarticle(link)
             if article:
-                res = es.search(index="news", doc_type='article', body={
-                      "query": {
-                        "bool": {
-                          "must": [
-                            {
-                              "match": {
-                                "pubdate":  article["pubdate"]
-                              }
-                            },
-                            {
-                              "match": {
-                                "title": article["title"]
-                              }
-                            }
-                          ]
-                        }
-                      }
-                })
 
-                hits = res['hits']['total']
-                print("hits", hits)
-                if hits == 0:
-                    es.index(index='newsG', doc_type='article', body=article)
+                es.index(index='news', doc_type='article', body=article)
 
         # link = links[0]
         # os.makedirs(os.path.join(self.articles_path,link), exist_ok=True)
@@ -399,7 +378,22 @@ def main(args):
 if __name__ == "__main__":
     main(sys.argv)
 
+"""
+ PUT news
+{
+  "mappings": {
+    "article": {
+      "properties": {
+        "pubdate": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ssZ||yyyy-MM-dd HH:mm:ss"
 
+        }
+      }
+    }
+  }
+}
+"""
 # 876
 
 #1053
@@ -438,5 +432,4 @@ if __name__ == "__main__":
 #   print(etree.tounicode(element, pretty_print=True))
 #   # print(type(element))
     # print(element.tag, element.text)
-
 

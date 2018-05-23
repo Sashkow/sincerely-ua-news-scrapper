@@ -102,3 +102,4 @@ env/
 .mypy_cache/
 
 .Rhistory
+.idea/
