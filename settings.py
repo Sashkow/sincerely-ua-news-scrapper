@@ -27,7 +27,7 @@ settings = {
         "date_template" : "%d-%m-%Y",
         "pages_template" : "div.pagination ul.pages li:last",
         "article_title_template" : "h1",
-        "article_publication_datetime" : "div.title div span:first",
+        "article_publication_datetime" : "div.article-content div.title div span:first",
         "article_text_template" : "span._ga1_on_",
         "tags_template2" : "div.tag a",
         "tags_template": "meta[name=keywords]",
@@ -61,11 +61,11 @@ settings = {
     {
         "articles_list_by_day_template": "https://ua.korrespondent.net/all/{date}/p{page_number}",
         "articles_list_content_blocks_template": "div.article.article_rubric_top,div.article.article_top.article_right a:first",
-        "article_link_template": "ul.list",
+        "article_link_template": "h3 a", #ul.list
         "date_template": "%Y/%B/%d",
         "pages_template": "div.col-12",
-        "article_title_template": "h1.article_title",
-        "article_publication_datetime": "h1.article_title div span:date",
+        "article_title_template": "h1.post-item__title",
+        "article_publication_datetime": "div.post-item__info",
         "article_text_template": "div.news_text",
         "tags_template2": "div.tags a",  # loop through a
         "tags_template": "",

@@ -1,4 +1,5 @@
-# get 
+
+import sys
 
 import os
 from pyquery import PyQuery as pq
@@ -20,7 +21,7 @@ import re
 import settings
 
 import html
-
+import re
 # import time
 
 with open('parties', 'r') as f:
@@ -28,7 +29,9 @@ with open('parties', 'r') as f:
 
 
 from elasticsearch import Elasticsearch
-es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+es = Elasticsearch(['https://elastic:oESru8NqPaZePrEZNQyb@localhost:443'])
+
+# es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 
 import requests
 
@@ -121,8 +124,11 @@ class Site():
         for a in a_tags:
             if ('https://' in a.attrib['href']) or ('http://' in a.attrib['href']):
                 urls.append(a.attrib['href'])
-            else:
+            elif getattr(a, 'base', lambda :None):
                 urls.append("".join([a.base, a.attrib['href']]))
+            else:
+                # print("link base in None; adding domain name instead")
+                urls.append("".join(["https://", self.domain_name, a.attrib['href']]))
 
         # urls = ['https://' + self.domain_name + url if 'https://' not in url else url for url in urls ]
         return urls
@@ -151,8 +157,9 @@ class Site():
                     day_links = []
                     if "pages_template" in self.templates:
 
-                        starting_link_to_links = articles_list_url.format(date=day.strftime(date_template),
+                        starting_link_to_links = articles_list_url.format(date=str(day.strftime(date_template)).lower(),
                                                                           page_number=str(1))
+
 
                         q = pq(starting_link_to_links)
                         pages_tags = q(self.templates["pages_template"])
@@ -168,47 +175,113 @@ class Site():
                     for page in range(max_pages):
                         print("     Processing", page+1)
 
-                        link_to_links = articles_list_url.format(date=day.strftime(date_template), page_number=str(page+1))
+                        link_to_links = articles_list_url.format(date=str(day.strftime(date_template)).lower(), page_number=str(page+1))
 
                         day_links = day_links + self.get_articles_urls(link_to_links)
-
+                    print(day_links)
                     self.to_memory(day, day_links)
             else:
                 for day in dates:
                     print("Procesing", day)
                     link_to_links = articles_list_url.format(date=day.strftime(date_template))
                     day_links = self.get_articles_urls(link_to_links)
+                    print(day_links)
                     self.to_memory(day, day_links)
         else:
             print("Got no links.")
             return None
 
-        # for link_to_links in links_to_links:
-        #     links_by_day = self.get_articles_urls(link_to_links)
-        #     print(links_by_day)
-        #     links = links + links_by_day
-        #
-        # full_links = []
-        # for link in links:
-        #     if self.domain_name not in link:
-        #         link = 'https://' + self.domain_name + link
-        #     full_links.append(link)
-        #
-        # for link in full_links:
-        #     print(link)
-        # return full_links
+        for link_to_links in links_to_links:
+            links_by_day = self.get_articles_urls(link_to_links)
+            print(links_by_day)
+            links = links + links_by_day
+
+        full_links = []
+        for link in links:
+            if self.domain_name not in link:
+                link = 'https://' + self.domain_name + link
+            full_links.append(link)
+
+        for link in full_links:
+            print(link)
+
+        return full_links
+
+
 
     def getarticles(self):
         """get articles along with metadata"""
+        if os.path.exists("skipped_list"):
+            os.remove("skipped_list")
+
         with open('links') as links_file:
             links = links_file.read().splitlines()
+            # check which links are duplicated exactly
+            # for link in links:
+            #     if links.count(link)>1:
+            #         print(link, links.count(link))
+
+            #remove duplicates
+            links = list(set(links))
+
+
+
+
         # for link in links():
         for link in links:
             article = self.getarticle(link)
-            es.index(index='news', doc_type='article', body=article)
+            if article:
+                res = es.search(index="news", doc_type='article', body={
+                      "query": {
+                        "bool": {
+                          "must": [
+                            {
+                              "match": {
+                                "pubdate":  article["pubdate"]
+                              }
+                            },
+                            {
+                              "match": {
+                                "title": article["title"]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                })
+
+                hits = res['hits']['total']
+                print("hits", hits)
+                if hits == 0:
+                    es.index(index='newsG', doc_type='article', body=article)
 
         # link = links[0]
         # os.makedirs(os.path.join(self.articles_path,link), exist_ok=True)
+    def _get_publication(self, link, pub_tag):
+
+        if hasattr(pub_tag, "attrib"):
+            if 'datetime' in pub_tag.attrib:
+                publication = pub_tag.attrib['datetime']
+            else:
+                publication = pub_tag.text
+        else:
+            publication = pub_tag.text
+
+        if not isinstance(publication, str):
+            return None
+
+        if "Корреспондент" in publication:
+            publication = publication[re.search("\d", publication).start():]
+
+        publication = dateparser.parse(publication)
+        if publication:
+            publication = str(publication)
+            print("Pubdate:", publication)
+        else:
+
+            return None
+
+        return publication
 
 
     def getarticle(self, link):
@@ -220,17 +293,29 @@ class Site():
         print("Title", title)
 
         pub_tag = q(self.templates['article_publication_datetime'])
-        print("here", pub_tag.text())
+
         if len(pub_tag) > 0:
-            pub_tag = pub_tag[0]
+            found = False
 
-        if 'datetime' in pub_tag.attrib:
-            publication = pub_tag.attrib['datetime']
+            for tag in pub_tag:
+                publication = self._get_publication(link, tag)
+                if publication:
+                    found = True
+                    break
+                else:
+                    print("Skipped", link, ": could not find publication date")
+                    with open("skipped_list", "a") as f:
+                        f.write(link + '\n')
+                    return None
         else:
-            publication = pub_tag.text()
+            publication = self._get_publication(link, pub_tag)
+            if not publication:
+                print("Skipped", link, ": could not find publication date")
+                with open("skipped_list", "a") as f:
+                    f.write(link + '\n')
+                return None
 
-        publication = str(dateparser.parse(publication))
-        print(publication)
+
 
         article_html = q(self.templates['article_text_template'])
         h = html2text.HTML2Text()
@@ -259,7 +344,7 @@ class Site():
             'marking': marking
         }
 
-        print(metadata)
+        # print(metadata)
         return metadata
 
         # folder_path = "/".join(["articles", self.domain_name])
@@ -293,6 +378,26 @@ class Site():
 
 def recall_site():
     return Site(json_input_path='memory')
+
+
+
+def main(args):
+    inputs = args[1:]
+    print(inputs)
+
+    # if fails, use recall.py
+    for input in inputs:
+        s = Site(input)
+        # scrap links to articles and save to "links" text file
+        s.getlinks(remember=True)
+        # parse articles from "links" file and upload to Elasticsearch
+        s.getarticles()
+
+
+
+
+if __name__ == "__main__":
+    main(sys.argv)
 
 
 # 876

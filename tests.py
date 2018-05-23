@@ -27,8 +27,18 @@ from datetime import date
 
 class TestSite(unittest.TestCase):
     # def test_getlinks(self):
-    #     site = Site('test_inputs/input_telegraf')
+    #     site = Site('test_inputs/input1')
     #     site.getlinks()
+
+
+
+
+    def test_articles(self):
+        site = recall_site()
+        site.getarticles()
+
+
+
 
     # def test_get_articles_urls(self):
     #     site = Site('test_inputs/input1')
@@ -40,18 +50,24 @@ class TestSite(unittest.TestCase):
     #     site = recall_site()
     #     site.getlinks()
     #     print(site.start_date)
+    #
 
-    def test_articles(self):
-        site = recall_site()
-        site.getarticles()
 
     # def test_get_article(self):
     #     site = recall_site()
-    #     # site.getarticle("/home/sashkoah/Python/sincerely-ua-news-scrapper/test_inputs/testhtml.html")
+    #     site.getarticle("https://www.segodnya.ua/lifestyle/psychology/v-avstralii-kenguru-pereprygnul-cherez-velosipedista-v-dvizhenii-793135.html")
 
+    # def test_get_article(self):
+    #     site = recall_site()
+    #     site.getarticle(
+    #             "https://www.segodnya.ua/opinion/faradgalahcolumn/perenos-posolstva-ukrainy-v-ierusalim-lishit-ee-partnerov-s-yuga-793803.html"
+# )
     # def test_get_article(self):
     #     site = recall_site()
     #     site.getarticle("https://www.segodnya.ua/lifestyle/food/postnoe-menyu-na-den-top-5-receptov-1116719.html")
+
+    # def test_to_memory(self):
+
 
 
 
