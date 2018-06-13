@@ -167,7 +167,6 @@ class Site():
                         if len(pages_tags) == 0:
                             max_pages = 2
                         else:
-                            print("here", starting_link_to_links)
                             max_pages = int(pages_tags.text().split(" ")[0])
                     else:
                         max_pages = 20
@@ -228,7 +227,11 @@ class Site():
 
 
         # for link in links():
+        i = 0
+        links_amnt = len(links)
         for link in links:
+            i+=1
+            print("Processing", i, "from", links_amnt, "links")
             article = self.getarticle(link)
             if article:
 
@@ -269,7 +272,7 @@ class Site():
         q = pq(response.text)
 
         title = q(self.templates['article_title_template']).text()
-        print("Title", title)
+        # print("Title", title)
 
         pub_tag = q(self.templates['article_publication_datetime'])
 

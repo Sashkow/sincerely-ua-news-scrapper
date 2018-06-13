@@ -27,16 +27,13 @@ from datetime import date
 
 class TestSite(unittest.TestCase):
     # def test_getlinks(self):
-    #     site = Site('test_inputs/input1')
+    #     site = Site('test_inputs/segodnya')
     #     site.getlinks()
-
-
 
 
     def test_articles(self):
         site = recall_site()
         site.getarticles()
-
 
 
 

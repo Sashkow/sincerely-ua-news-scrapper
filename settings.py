@@ -19,6 +19,7 @@
 
 
 settings = {
+    # skipps sports, lifestyle
     "www.segodnya.ua":
     {
         "articles_list_by_day_template" : "https://www.segodnya.ua/allnews/archive/{date}/p{page_number}.html",
@@ -33,6 +34,7 @@ settings = {
         "tags_template": "meta[name=keywords]",
         "news_keywords": "meta[name=news_keywords]"
     },
+    # Skipped https://tsn.ua/special-projects/yearend/
     "www.tsn.ua":
     {
         "articles_list_by_day_template" : "https://tsn.ua/sitemap/text/{date}/index.html",
@@ -44,6 +46,7 @@ settings = {
         "article_text_template" : "div.o-cmr.u-content-read.js-select-bar-wrap",
         "tags_template": "meta[name=keywords]",
     },
+
     "www.24tv.ua":
     {
         "articles_list_by_day_template": "https://24tv.ua/archive/{date}/index.html",
@@ -153,8 +156,8 @@ settings = {
     "www.112.ua":
     {
         "articles_list_by_day_template" :  "https://112.ua/archive?date_from={date}-10&date_to={date}",
-        "articles_list_content_blocks_template" : "ul.news-list",
-        "article_link_template" : "li p a",
+        "articles_list_content_blocks_template" : "div.columns.auto.page-main-column",
+        "article_link_template" : "li div.decs-list a",
         "date_template" : "%Y-%m-%d",
         "pages_template" : "ul.pagination [class!='next'] li:last",
         "article_title_template" : "div.b-center-item-head-info h1",
