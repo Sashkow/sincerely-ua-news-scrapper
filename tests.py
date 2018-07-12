@@ -32,14 +32,13 @@ es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 #         p.print_summary()
 
 class TestSite(unittest.TestCase):
-    def test_getlinks(self):
-        site = Site('test_inputs/segodnya')
-        # site.getlinks()
-#
-#
-#     def test_articles(self):
-#         site = recall_site()
-#         site.getarticles()
+#     def test_getlinks(self):
+#         site = Site('test_inputs/segodnya')
+#         site.getlinks()
+
+    def test_articles(self):
+        site = recall_site()
+        site.getarticles()
 
 
 
@@ -61,12 +60,12 @@ class TestSite(unittest.TestCase):
     #     site.getarticle("https://www.segodnya.ua/lifestyle/psychology/v-avstralii-kenguru-pereprygnul-cherez-velosipedista-v-dvizhenii-793135.html")
 
 
-    def test_get_article(self):
-        site = recall_site()
-        article = site.getarticle("https://www.segodnya.ua/opinion/faradgalahcolumn/perenos-posolstva-ukrainy-v-ierusalim-lishit-ee-partnerov-s-yuga-793803.html")
-        # es.index(index='news', doc_type='article', body=article)
-        es.search(index="news3", body={"query": {"term": {"title.raw": "Трех инfgостранцев будут судить за похищение и убийство в Одессе"}}})['hits']['total']
-        es.update(index='test', doc_type='article', body={'doc':article, 'doc_as_upsert': True})
+    # def test_get_article(self):
+    #     site = recall_site()
+    #     article = site.getarticle("https://www.segodnya.ua/opinion/faradgalahcolumn/perenos-posolstva-ukrainy-v-ierusalim-lishit-ee-partnerov-s-yuga-793803.html")
+    #     # es.index(index='news', doc_type='article', body=article)
+    #     es.search(index="news3", body={"query": {"term": {"title.raw": "Трех инfgостранцев будут судить за похищение и убийство в Одессе"}}})['hits']['total']
+    #     es.update(index='test', doc_type='article', body={'doc':article, 'doc_as_upsert': True})
 # )
     # def test_get_article(self):
     #     site = recall_site()
@@ -92,8 +91,8 @@ from elasticsearch import Elasticsearch
 import elasticsearch.helpers
 # es = Elasticsearch(['https://elastic:oESru8NqPaZePrEZNQyb@localhost:443'])
 
-es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-elasticsearch.helpers.reindex(es,'news','news3')
+# es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+# elasticsearch.helpers.reindex(es,'news','news3')
 
 
 

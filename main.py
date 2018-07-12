@@ -24,6 +24,9 @@ import html
 import re
 # import time
 
+
+es_index = 'news4'
+
 with open('parties', 'r') as f:
     parties = f.read().splitlines()
 
@@ -233,17 +236,48 @@ class Site():
         # for link in links():
         i = 0
         links_amnt = len(links)
+        indexed = 0
         for link in links:
             i+=1
-            print("Processing", i, "from", links_amnt, "links")
-            article = self.getarticle(link)
-            if article:
-                if es.search(index="news", body={
-            "query": {"term": {"title.raw": article['title']}}})[
-            'hits']['total'] == 0:
-                    es.index(index='news', doc_type='article', body=article)
+            for attempt in range(100):
+                try:
+                    print("Processing", i, "from", links_amnt, "links. Attempt", attempt)
+                    article = self.getarticle(link)
+                    if article:
+                        if es.search(index=es_index, body=
+                        {
+                            "query": {
+                                "bool": {
+                                    "must": [
+                                        {
+                                            "term": {
+                                                "title.raw": article['title']
+                                            }
+                                        },
+                                        {
+                                            "term": {
+                                                "pubdate": article['pubdate']
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        })['hits']['total'] == 0:
+                            # "query": {"term": {}}})[
+                            # 'hits']['total'] == 0:
+
+                            es.index(index=es_index, doc_type='article', body=article)
+
+                            indexed +=1
+                        else:
+                            print("Article with title", article['title'], "and date", article['pubdate'], "already indexed")
+
+                except:
+                    print("Falied to index document into index. Retrying...")
                 else:
-                    print("already_indexed")
+                    break
+        print("Indexed", indexed, "out of", links_amnt, "new articles")
+
 
         # link = links[0]
         # os.makedirs(os.path.join(self.articles_path,link), exist_ok=True)
