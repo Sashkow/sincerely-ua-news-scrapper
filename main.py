@@ -215,13 +215,17 @@ class Site():
 
         with open('links') as links_file:
             links = links_file.read().splitlines()
+
+
             # check which links are duplicated exactly
-            # for link in links:
-            #     if links.count(link)>1:
-            #         print(link, links.count(link))
+            for link in links:
+                if links.count(link)>1:
+                    print(link, links.count(link))
 
             #remove duplicates
             links = list(set(links))
+
+
 
 
 
@@ -234,8 +238,12 @@ class Site():
             print("Processing", i, "from", links_amnt, "links")
             article = self.getarticle(link)
             if article:
-
-                es.index(index='news', doc_type='article', body=article)
+                if es.search(index="news", body={
+            "query": {"term": {"title.raw": article['title']}}})[
+            'hits']['total'] == 0:
+                    es.index(index='news', doc_type='article', body=article)
+                else:
+                    print("already_indexed")
 
         # link = links[0]
         # os.makedirs(os.path.join(self.articles_path,link), exist_ok=True)
@@ -284,11 +292,11 @@ class Site():
                 if publication:
                     found = True
                     break
-                else:
-                    print("Skipped", link, ": could not find publication date")
-                    with open("skipped_list", "a") as f:
-                        f.write(link + '\n')
-                    return None
+            if not found:
+                print("Skipped", link, ": could not find publication date")
+                with open("skipped_list", "a") as f:
+                    f.write(link + '\n')
+                return None
         else:
             publication = self._get_publication(link, pub_tag)
             if not publication:

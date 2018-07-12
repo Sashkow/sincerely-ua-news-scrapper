@@ -7,6 +7,12 @@ from main import Site
 from main import recall_site
 from datetime import date
 
+from elasticsearch import Elasticsearch
+# es = Elasticsearch(['https://elastic:oESru8NqPaZePrEZNQyb@localhost:443'])
+
+es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+
+
 # from wordforms import generate_wordforms, generate_phraseforms
 
 
@@ -26,14 +32,14 @@ from datetime import date
 #         p.print_summary()
 
 class TestSite(unittest.TestCase):
-    # def test_getlinks(self):
-    #     site = Site('test_inputs/segodnya')
-    #     site.getlinks()
-
-
-    def test_articles(self):
-        site = recall_site()
-        site.getarticles()
+    def test_getlinks(self):
+        site = Site('test_inputs/segodnya')
+        # site.getlinks()
+#
+#
+#     def test_articles(self):
+#         site = recall_site()
+#         site.getarticles()
 
 
 
@@ -54,10 +60,13 @@ class TestSite(unittest.TestCase):
     #     site = recall_site()
     #     site.getarticle("https://www.segodnya.ua/lifestyle/psychology/v-avstralii-kenguru-pereprygnul-cherez-velosipedista-v-dvizhenii-793135.html")
 
-    # def test_get_article(self):
-    #     site = recall_site()
-    #     site.getarticle(
-    #             "https://www.segodnya.ua/opinion/faradgalahcolumn/perenos-posolstva-ukrainy-v-ierusalim-lishit-ee-partnerov-s-yuga-793803.html"
+
+    def test_get_article(self):
+        site = recall_site()
+        article = site.getarticle("https://www.segodnya.ua/opinion/faradgalahcolumn/perenos-posolstva-ukrainy-v-ierusalim-lishit-ee-partnerov-s-yuga-793803.html")
+        # es.index(index='news', doc_type='article', body=article)
+        es.search(index="news3", body={"query": {"term": {"title.raw": "Трех инfgостранцев будут судить за похищение и убийство в Одессе"}}})['hits']['total']
+        es.update(index='test', doc_type='article', body={'doc':article, 'doc_as_upsert': True})
 # )
     # def test_get_article(self):
     #     site = recall_site()
@@ -78,6 +87,33 @@ class TestSite(unittest.TestCase):
 #     def test_generate_phaseforms(self):
 #         phrase = 'Блок Геннадія Чекіти "За справедливість"'
 #         generate_phraseforms(phrase)
+
+from elasticsearch import Elasticsearch
+import elasticsearch.helpers
+# es = Elasticsearch(['https://elastic:oESru8NqPaZePrEZNQyb@localhost:443'])
+
+es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+elasticsearch.helpers.reindex(es,'news','news3')
+
+
+
+# class TestES(unittest.TestCase):
+#     def test_es_search(self):
+#         res = es.search(index="news", body={"query": {"term": {"title": "1"}}})
+#         res = es.search(index="news", body={"query": {"term": {"title": "1"}}})
+#         for item in res["hits"]:
+#             print(item,res["hits"][item])
+#
+
+
+
+
+
+
+
+
+
+
 
 
 
