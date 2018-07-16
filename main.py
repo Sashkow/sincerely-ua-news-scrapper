@@ -136,14 +136,15 @@ class Site():
         # urls = ['https://' + self.domain_name + url if 'https://' not in url else url for url in urls ]
         return urls
 
-    def getlinks(self, remember = False):
+    def getlinks(self, remember = False, append = False):
         """Get articles' links given domain name and a date range"""
 
         links_to_links = []
         links = []
         current_date = ""
-        if os.path.exists("links"):
-            os.remove("links")
+        if append == False:
+            if os.path.exists("links"):
+                os.remove("links")
 
 
         if "articles_list_by_day_template" in self.templates:
@@ -272,7 +273,8 @@ class Site():
                         else:
                             print("Article with title", article['title'], "and date", article['pubdate'], "already indexed")
 
-                except:
+                except Exception as err:
+                    print(err)
                     print("Falied to index document into index. Retrying...")
                 else:
                     break
@@ -281,11 +283,42 @@ class Site():
 
         # link = links[0]
         # os.makedirs(os.path.join(self.articles_path,link), exist_ok=True)
+
+    def get_publication(self, link, q, template_name):
+
+        publication_templates = self.templates[template_name]
+        if not isinstance(publication_templates, list):
+            publication_templates = [publication_templates,]
+
+        for template in publication_templates:
+
+            pub_tag = q(template)
+
+            if len(pub_tag) > 0:
+                found = False
+
+                for tag in pub_tag:
+                    publication = self._get_publication(link, tag)
+                    if publication:
+                        found = True
+                        break
+                if found:
+                    break
+            else:
+                publication = self._get_publication(link, pub_tag)
+                if publication:
+                    break
+        return publication
+
+
+
     def _get_publication(self, link, pub_tag):
 
         if hasattr(pub_tag, "attrib"):
             if 'datetime' in pub_tag.attrib:
                 publication = pub_tag.attrib['datetime']
+            elif 'time' in pub_tag.attrib:
+                publication = pub_tag.attrib['time']
             else:
                 publication = pub_tag.text
         else:
@@ -297,7 +330,7 @@ class Site():
         if "Корреспондент" in publication:
             publication = publication[re.search("\d", publication).start():]
 
-        publication = dateparser.parse(publication)
+        publication = dateparser.parse(publication, languages=['uk', 'en', 'ru'])
         if publication:
             publication = str(publication)
             print("Pubdate:", publication)
@@ -316,29 +349,13 @@ class Site():
         title = q(self.templates['article_title_template']).text()
         # print("Title", title)
 
-        pub_tag = q(self.templates['article_publication_datetime'])
 
-        if len(pub_tag) > 0:
-            found = False
-
-            for tag in pub_tag:
-                publication = self._get_publication(link, tag)
-                if publication:
-                    found = True
-                    break
-            if not found:
-                print("Skipped", link, ": could not find publication date")
-                with open("skipped_list", "a") as f:
-                    f.write(link + '\n')
-                return None
-        else:
-            publication = self._get_publication(link, pub_tag)
-            if not publication:
-                print("Skipped", link, ": could not find publication date")
-                with open("skipped_list", "a") as f:
-                    f.write(link + '\n')
-                return None
-
+        publication = self.get_publication(link, q, 'article_publication_datetime')
+        if not publication:
+            print("Skipped {}: could not find publication date".format(link))
+            with open("skipped_list", "a") as f:
+                f.write(link + '\n')
+            return None
 
 
         article_html = q(self.templates['article_text_template'])
@@ -367,6 +384,8 @@ class Site():
             'tags' : tags,
             'marking': marking
         }
+
+
 
         # print(metadata)
         return metadata
