@@ -1,0 +1,168 @@
+DELETE news4
+
+PUT news4
+{
+  "mappings": {
+    "article": {
+      "properties": {
+        "pubdate": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ssZ||yyyy-MM-dd HH:mm:ss"
+        },
+        "title" : {
+          "type" : "text",
+          "fields": {
+            "raw": {
+              "type":  "keyword"
+            }
+          }
+        },
+        "domain" : {
+          "type" : "keyword"
+        },
+        "article_html" : {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "link" : {
+          "type": "keyword"
+        },
+
+        "article_text":{
+          "type": "string",
+          "fields": {
+            "ua": {
+              "type":     "string",
+              "analyzer": "ukrainian"
+            },
+            "en": {
+              "type":     "string",
+              "analyzer": "english"
+            },
+            "ru": {
+              "type":     "string",
+              "analyzer": "russian"
+            },
+            "general": {
+              "type":     "string",
+              "analyzer": "trigrams"
+            }
+          }
+        },
+        "symbol_count":{
+          "type": "integer"
+        },
+        "tags":{
+          "type":"keyword"
+        }
+
+
+      }
+
+    }
+  }
+}
+
+DELETE my_index
+
+PUT my_index
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_custom_analyzer": {
+          "type": "custom",
+          "tokenizer": "standard",
+          "char_filter": [
+            "html_strip"
+          ],
+          "filter": [
+            "lowercase",
+            "asciifolding"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "article": {
+      "properties": {
+        "title": {
+          "type": "text",
+          "analyzer": "my_custom_analyzer"
+        },
+        "pubdate": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ssZ||yyyy-MM-dd HH:mm:ss"
+        }
+        "a"
+        "type": "string",
+            "index": "not_analyzed"
+      }
+    }
+  }
+}
+
+GET /news4/_search
+{
+  "query":{
+    "term":{
+      "domain.keyword": "sego"
+    }
+  }
+}
+
+GET /news4/_search
+{
+  "query": {
+      "bool": {
+          "must": [
+              {
+                  "term": {
+                      "title.raw": "Саакашвили возмутили условия, в которых живут бойцы \"Шторма\""
+                  }
+              },
+              {
+                  "term": {
+                      "pubdate": "2016-01-15 15:14:00"
+                  }
+              }
+          ]
+      }
+  }
+}
+
+
+GET /my_index/_search
+{
+    "query": {
+        "match_phrase" : {
+            "title" : "Трех иностранцев будут судить за похищение и убийство в Одессе"
+        }
+    }
+}
+
+
+
+GET /news3/article/_search?pretty=true
+{
+  "size": 0,
+  "aggs": {
+    "duplicateCount": {
+      "terms": {
+        "script" : {
+                    "source": "doc['title.raw'].value+",
+                    "lang": "painless"
+                }
+        "field": "title.raw",
+        "min_doc_count": 2
+      },
+      "aggs": {
+        "duplicateDocuments": {
+          "top_hits": {}
+        }
+      }
+    }
+  }
+}
+

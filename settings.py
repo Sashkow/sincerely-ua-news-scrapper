@@ -49,7 +49,7 @@ settings = {
 
     "www.24tv.ua":
     {
-        "articles_list_by_day_template": "https://24tv.ua/archive/{date}/index.html",
+        "articles_list_by_day_template": "https://24tv.ua/archive/{date}/",
         "articles_list_content_blocks_template": "div.news-list.category_list.b_video",
         "article_link_template": "li a.news_title",
         "date_template": "%d_%B_%Y",
@@ -76,12 +76,12 @@ settings = {
     "www.telegraf.com.ua":
     {
        "articles_list_by_day_template" : "https://telegraf.com.ua/sitemap/{date}.html",
-       "articles_list_content_blocks_template" : "", #taka-to hernia
-       "article_link_template" : "a.href",
-       "date_template" : "%Y_%B_%d",
+       "articles_list_content_blocks_template" : "*", #taka-to hernia
+       "article_link_template" : "a",
+       "date_template" : "%Y-%m-%d",
        # "pages_template" : "div.col-12",
        "article_title_template" : "header h1", # article title template was fixed
-       "article_publication_datetime" : "div.article div span:date",
+       "article_publication_datetime" : ["div.article-content div#article_block meta[itemprop='datePublished']",], # div.article div span:date
        "article_text_template" : "div.block-post-text",
        "tags_template2" : "div.keywords_block", #loop through a
        "tags_template": "",

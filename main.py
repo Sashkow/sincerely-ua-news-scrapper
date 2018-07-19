@@ -22,10 +22,13 @@ import settings
 
 import html
 import re
+
+from shutil import copyfile
+
 # import time
 
 
-es_index = 'news4'
+es_index = 'news5'
 
 with open('parties', 'r') as f:
     parties = f.read().splitlines()
@@ -124,7 +127,11 @@ class Site():
         a_tags = q(article_template)
         urls = []
 
+
         for a in a_tags:
+            if self.domain_name == "www.telegraf.com.ua" and "/sitemap/" in a.attrib['href']:
+                continue
+
             if ('https://' in a.attrib['href']) or ('http://' in a.attrib['href']):
                 urls.append(a.attrib['href'])
             elif getattr(a, 'base', lambda :None):
@@ -215,6 +222,7 @@ class Site():
     def getarticles(self):
         """get articles along with metadata"""
         if os.path.exists("skipped_list"):
+            copyfile("skipped_list", "skipped_list_log", follow_symlinks=False)
             os.remove("skipped_list")
 
         with open('links') as links_file:
@@ -242,7 +250,7 @@ class Site():
             i+=1
             for attempt in range(100):
                 try:
-                    print("Processing", i, "from", links_amnt, "links. Attempt", attempt)
+                    print("Processing", i, "of", links_amnt, "links. Attempt", attempt)
                     article = self.getarticle(link)
                     if article:
                         if es.search(index=es_index, body=
@@ -252,7 +260,7 @@ class Site():
                                     "must": [
                                         {
                                             "term": {
-                                                "title.raw": article['title']
+                                                "title.keyword": article['title']
                                             }
                                         },
                                         {
@@ -319,6 +327,8 @@ class Site():
                 publication = pub_tag.attrib['datetime']
             elif 'time' in pub_tag.attrib:
                 publication = pub_tag.attrib['time']
+            elif 'content' in pub_tag.attrib:
+                publication = pub_tag.attrib['content']
             else:
                 publication = pub_tag.text
         else:
@@ -347,6 +357,12 @@ class Site():
         q = pq(response.text)
 
         title = q(self.templates['article_title_template']).text()
+        if not title:
+            print("Skipped {}: could not find title. Maybe it is football news that are formatted differently".format(link))
+            with open("skipped_list", "a") as f:
+                f.write(link + '\n')
+            return None
+
         # print("Title", title)
 
 
@@ -356,7 +372,6 @@ class Site():
             with open("skipped_list", "a") as f:
                 f.write(link + '\n')
             return None
-
 
         article_html = q(self.templates['article_text_template'])
         h = html2text.HTML2Text()
@@ -414,8 +429,6 @@ class Site():
                 print(item)
             joined_links = '\n'.join(date_links) + '\n'
             links_file.write(joined_links)
-
-
 
 
 
