@@ -35,10 +35,7 @@ class TestSite(unittest.TestCase):
     # def test_getlinks(self):
     #     site = Site('test_inputs/segodnya')
     #     site.getlinks()
-    # def test_getlinks(self):
-    #     site = Site('test_inputs/24tv')
-    #     site.getlinks()
-
+  u
     # def test_getlinks(self):
     #     site = Site('test_inputs/tsn')
     #     site.getlinks()
@@ -51,11 +48,11 @@ class TestSite(unittest.TestCase):
     #     site = Site('test_inputs/telegraf')
     #     site.getlinks()
 
-
-
-    def test_articles(self):
-        site = recall_site()
-        site.getarticles()
+    #
+    #
+    # def test_articles(self):
+    #     site = recall_site()
+    #     site.getarticles()
 
 
 
@@ -76,9 +73,9 @@ class TestSite(unittest.TestCase):
     #     site = recall_site()
     #     site.getarticle("https://www.segodnya.ua/lifestyle/psychology/v-avstralii-kenguru-pereprygnul-cherez-velosipedista-v-dvizhenii-793135.html")def test_get_article(self):
 
-    # def test_get_article(self):
-    #     site = recall_site()
-    #     site.getarticle("https://telegraf.com.ua/mir/europa/3075512-italiyu-vskolyihnulo-novoe-zemletryasenie.html")
+    def test_get_article(self):
+        site = recall_site()
+        site.getarticle("https://telegraf.com.ua/ukraina/politika/2255595-klimkin-primet-uchastie-v-zasedanii-postoyannogo-soveta-obse.html")
 
 
 
@@ -114,7 +111,7 @@ class TestSite(unittest.TestCase):
 # # es = Elasticsearch(['https://elastic:oESru8NqPaZePrEZNQyb@localhost:443'])
 #
 # es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-# elasticsearch.helpers.reindex(es,'news5','news5')
+# пes,'news5','news5')
 
 
 
