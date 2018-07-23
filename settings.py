@@ -54,7 +54,7 @@ settings = {
         "article_link_template": "li a.news_title",
         "date_template": "%d_%B_%Y",
         # "pages_template" : "div.col-12",
-        "article_title_template": "h1.article_title",
+        "article_title_template": ["h1.article_title", "div.news-block h1.news-title", "h1#newsName.article_title"],
         "article_publication_datetime": ["div.top-news-info time", "div.news-info-big span.date","div.top-media-content time", "div.news-info span.time"],
         "article_text_template": "div.news_text",
         "tags_template2": "div.tags a",  # loop through a

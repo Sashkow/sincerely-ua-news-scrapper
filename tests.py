@@ -35,7 +35,7 @@ class TestSite(unittest.TestCase):
     # def test_getlinks(self):
     #     site = Site('test_inputs/segodnya')
     #     site.getlinks()
-  u
+
     # def test_getlinks(self):
     #     site = Site('test_inputs/tsn')
     #     site.getlinks()
@@ -43,16 +43,16 @@ class TestSite(unittest.TestCase):
     # def test_getlinks(self):
     #     site = Site('test_inputs/kor')
     #     site.getlinks()
-
+    #
     # def test_getlinks(self):
-    #     site = Site('test_inputs/telegraf')
+    #     site = Site('test_inputs/24tv')
     #     site.getlinks()
 
-    #
-    #
-    # def test_articles(self):
-    #     site = recall_site()
-    #     site.getarticles()
+
+
+    def test_articles(self):
+        site = recall_site()
+        site.getarticles()
 
 
 
@@ -69,13 +69,10 @@ class TestSite(unittest.TestCase):
     #
 
 
+
     # def test_get_article(self):
     #     site = recall_site()
-    #     site.getarticle("https://www.segodnya.ua/lifestyle/psychology/v-avstralii-kenguru-pereprygnul-cherez-velosipedista-v-dvizhenii-793135.html")def test_get_article(self):
-
-    def test_get_article(self):
-        site = recall_site()
-        site.getarticle("https://telegraf.com.ua/ukraina/politika/2255595-klimkin-primet-uchastie-v-zasedanii-postoyannogo-soveta-obse.html")
+    #     site.getarticle("https://24tv.ua/golovni_novini_7_travnya_rezultati_viboriv_u_frantsiyi_tseremoniya_vidkrittya_yevrobachennya_2017_n814869")
 
 
 

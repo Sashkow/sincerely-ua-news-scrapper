@@ -356,7 +356,16 @@ class Site():
         response = requests.get(link)
         q = pq(response.text)
 
-        title = q(self.templates['article_title_template']).text()
+        title_s = self.templates['article_title_template']
+        if not isinstance(title_s, list):
+            title_s = [title_s,]
+
+
+        for title_try in title_s:
+            title = q(title_try).text()
+            if title:
+                break
+
         if not title:
             print("Skipped {}: could not find title. Maybe it is football news that are formatted differently".format(link))
             with open("skipped_list", "a") as f:
