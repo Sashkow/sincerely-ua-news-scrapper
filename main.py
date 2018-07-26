@@ -389,7 +389,33 @@ class Site():
 
         symbol_count = len(h.handle(str(article_html)))
 
-        tags = str(q(self.templates['tags_template']).attr("content")).split(", ")
+        tags_template_s = self.templates['tags_template']
+        if not isinstance(tags_template_s, list):
+            tags_template_s = [tags_template_s,]
+
+        for tag_template in tags_template_s:
+            tags = []
+
+
+            tags_element_s = q(tag_template)
+
+            if len(tags_element_s) == 1:
+
+                if hasattr(tags_element_s, "attrib"):
+                    if "content" in tags.attrib:
+                        tags = tags_element_s.attrib("content").split(", ")
+                    else:
+                        tags = tags_element_s.text.split(", ")
+            else:
+                for tags_element in tags_element_s:
+                    tag = tags_element.text
+                    tag = tag.replace(u'\xa0', '')
+                    tags.append(tag)
+            if tags:
+                break
+        print("tags:", tags)
+        if not tags:
+            print("No tags found")
 
         if "news_keywords" in self.templates:
             marking = str(q(self.templates["news_keywords"]).attr("content")).split(", ")

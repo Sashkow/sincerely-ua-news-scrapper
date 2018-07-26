@@ -32,24 +32,28 @@ es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
 #         p.print_summary()
 
 class TestSite(unittest.TestCase):
-    # def test_getlinks(self):
-    #     site = Site('test_inputs/segodnya')
-    #     site.getlinks()
-
-    # def test_getlinks(self):
-    #     site = Site('test_inputs/tsn')
-    #     site.getlinks()
-
-    # def test_getlinks(self):
-    #     site = Site('test_inputs/kor')
-    #     site.getlinks()
+    # # def test_getlinks(self):
+    # #     site = Site('test_inputs/segodnya')
+    # #     site.getlinks()
     #
+    # # def test_getlinks(self):
+    # #     site = Site('test_inputs/tsn')
+    # #     site.getlinks()
+    #
+    # # def test_getlinks(self):
+    # #     site = Site('test_inputs/kor')
+    # #     site.getlinks()
+    # #
     # def test_getlinks(self):
     #     site = Site('test_inputs/24tv')
     #     site.getlinks()
 
+    # def test_getlinks(self):
+    #     site = Site('test_inputs/censor_net')
+    #     site.getlinks()
 
 
+            #
     def test_articles(self):
         site = recall_site()
         site.getarticles()
@@ -68,11 +72,11 @@ class TestSite(unittest.TestCase):
     #     print(site.start_date)
     #
 
-
-
+    #
+    #
     # def test_get_article(self):
     #     site = recall_site()
-    #     site.getarticle("https://24tv.ua/golovni_novini_7_travnya_rezultati_viboriv_u_frantsiyi_tseremoniya_vidkrittya_yevrobachennya_2017_n814869")
+    #     site.getarticle("https://24tv.ua/havi__pershij_mizhnarodnij_posol_chs2022_n943336")
 
 
 

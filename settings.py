@@ -96,8 +96,7 @@ settings = {
        "article_title_template" : "h1.entry-title",
        "article_publication_datetime" : "time.published.dateline",
        "article_text_template" : "div.text",
-       "tags_template2" : "div.tags",
-       "tags_template": "div.news_by_theme",
+       "tags_template": ["div.news_by_theme", "div.tags", "div.tags a"],
     },
     "www.112.ua":
     {
