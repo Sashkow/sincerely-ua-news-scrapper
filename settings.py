@@ -98,18 +98,23 @@ settings = {
        "article_text_template" : "div.text",
        "tags_template": ["div.news_by_theme", "div.tags", "div.tags a"],
     },
+
     "www.112.ua":
     {
-        "articles_list_by_day_template": "https://112.ua/archive?date_from={date}-10&date_to={date}",
+        "articles_list_by_day_template": "https://112.ua/archive/p{page_number}?date_from={date}&date_to={date}",
         "articles_list_content_blocks_template": "div.columns.auto.page-main-column",
         "article_link_template": "li div.decs-list a",
         "date_template": "%Y-%m-%d",
-        "pages_template": "ul.pagination [class!='next'] li:last",
-        "article_title_template": "div.b-center-item-head-info h1",
-        "article_publication_datetime": "div.meta-info div.time",
+        # "pages_template": "ul.pagination [class!='next'] li:last",
+        "article_title_template": ["article.article-content h1.h1", "div.video-playlist h1.title-pl-list"],
+        "article_publication_datetime": [
+            "div.meta-info div.time",
+            "div.article-details.row.align-middle.align-justify.description span.datetime",
+            'meta[property="og:updated_time"]'
+        ],
         "article_text_template": "h3.article-lead, div.article-text",
-        "tags_template2": "div.article-tags",
-        # "tags_template": "meta[name=keywords]",
+        # "tags_template2": "div.article-tags",
+        "tags_template": ["meta[name=keywords]", "div.article-tags a"],
         # "news_keywords": "meta[name=news_keywords]"
     },
     "www.strana.ua":
@@ -248,6 +253,7 @@ settings = {
        #"tags_template2" : "div.keywords_block", #loop through a
        "tags_template": ".tags a",
    }
+
 }
 
 

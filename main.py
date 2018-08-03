@@ -219,7 +219,12 @@ class Site():
 
 
 
-    def getarticles(self):
+    def getarticles(self, overwrite=False):
+        """
+
+        :param overwrite: boolean; if True, owerwrites if article is already indexed in elasticsearch, if False - skippes; default - False
+        :return:
+        """
         """get articles along with metadata"""
         if os.path.exists("skipped_list"):
             copyfile("skipped_list", "skipped_list_log", follow_symlinks=False)
@@ -253,8 +258,7 @@ class Site():
                     print("Processing", i, "of", links_amnt, "links. Attempt", attempt)
                     article = self.getarticle(link)
                     if article:
-                        if es.search(index=es_index, body=
-                        {
+                        query = {
                             "query": {
                                 "bool": {
                                     "must": [
@@ -271,7 +275,9 @@ class Site():
                                     ]
                                 }
                             }
-                        })['hits']['total'] == 0:
+                        }
+
+                        if es.search(index=es_index, body=query)['hits']['total'] == 0:
                             # "query": {"term": {}}})[
                             # 'hits']['total'] == 0:
 
@@ -279,7 +285,13 @@ class Site():
 
                             indexed +=1
                         else:
-                            print("Article with title", article['title'], "and date", article['pubdate'], "already indexed")
+                            if overwrite == False:
+                                print("Article with title", article['title'], "and date", article['pubdate'], "already indexed")
+                            else:
+                                es.delete_by_query(index=es_index, doc_type='article', body = query)
+                                es.index(index=es_index, doc_type='article', body=article)
+                                indexed += 1
+
 
                 except Exception as err:
                     print(err)
@@ -367,7 +379,7 @@ class Site():
                 break
 
         if not title:
-            print("Skipped {}: could not find title. Maybe it is football news that are formatted differently".format(link))
+            print("Skipped {}: could not find title.".format(link))
             with open("skipped_list", "a") as f:
                 f.write(link + '\n')
             return None
@@ -404,14 +416,14 @@ class Site():
                 if hasattr(tags_element_s, "attrib"):
                     if "content" in tags.attrib:
                         tags = tags_element_s.attrib("content").split(", ")
-                    else:
-                        tags = tags_element_s.text.split(", ")
+                else:
+                    tags = tags_element_s.text().split(", ")
             else:
                 for tags_element in tags_element_s:
                     tag = tags_element.text
                     tag = tag.replace(u'\xa0', '')
                     tags.append(tag)
-            if tags:
+            if len(tags)>0 and tags[0]:
                 break
         print("tags:", tags)
         if not tags:

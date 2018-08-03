@@ -45,7 +45,7 @@ class TestSite(unittest.TestCase):
     # #     site.getlinks()
     # #
     # def test_getlinks(self):
-    #     site = Site('test_inputs/24tv')
+    #     site = Site('test_inputs/112')
     #     site.getlinks()
 
     # def test_getlinks(self):
@@ -53,10 +53,10 @@ class TestSite(unittest.TestCase):
     #     site.getlinks()
 
 
-            #
+
     def test_articles(self):
         site = recall_site()
-        site.getarticles()
+        site.getarticles(overwrite=False)
 
 
 
@@ -73,10 +73,10 @@ class TestSite(unittest.TestCase):
     #
 
     #
-    #
+
     # def test_get_article(self):
     #     site = recall_site()
-    #     site.getarticle("https://24tv.ua/havi__pershij_mizhnarodnij_posol_chs2022_n943336")
+    #     site.getarticle("https://112.ua/video/novosti-112-vypusk-ot-1100-01012017-222733.html")
 
 
 
