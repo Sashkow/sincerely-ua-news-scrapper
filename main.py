@@ -124,6 +124,7 @@ class Site():
         print(link_to_links)
         article_template = self.templates["article_link_template"]
         q = pq(link_to_links)(self.templates['articles_list_content_blocks_template'])
+
         a_tags = q(article_template)
         urls = []
 
@@ -180,7 +181,7 @@ class Site():
                         else:
                             max_pages = int(pages_tags.text().split(" ")[0])
                     else:
-                        max_pages = 20
+                        max_pages = 30
                     print("MaxPages:", max_pages)
                     for page in range(max_pages):
                         print("     Processing", page+1)

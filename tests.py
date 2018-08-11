@@ -52,6 +52,11 @@ class TestSite(unittest.TestCase):
     #     site = Site('test_inputs/censor_net')
     #     site.getlinks()
 
+    # def test_getlinks(self):
+    #     site = Site('test_inputs/strana')
+    #     site.getlinks()
+
+
 
 
     def test_articles(self):
