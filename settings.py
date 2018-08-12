@@ -126,7 +126,7 @@ settings = {
        # "pages_template" : "div.col-12",
        "article_title_template" : ["h1.article", "div.article-title.article-edit h1"],
        "article_publication_datetime" : "div.article-meta time.date span.strana-adate",
-       "article_text_template" : "div.article-body",
+       "article_text_template" : "div#article-body",
        # "tags_template2" : "", #loop through a
        "tags_template": "div.tags a span.tag",
     },

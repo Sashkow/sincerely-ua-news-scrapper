@@ -227,12 +227,17 @@ class Site():
         :return:
         """
         """get articles along with metadata"""
-        if os.path.exists("skipped_list"):
-            copyfile("skipped_list", "skipped_list_log", follow_symlinks=False)
-            os.remove("skipped_list")
+
 
         with open('links') as links_file:
             links = links_file.read().splitlines()
+            if len(links) == 1 and links[0]=='':
+                print("There are no links in 'links' file. Please use getlinks first.")
+                return
+
+        if os.path.exists("skipped_list"):
+            copyfile("skipped_list", "skipped_list_log", follow_symlinks=False)
+            os.remove("skipped_list")
 
 
             # check which links are duplicated exactly

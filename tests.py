@@ -55,8 +55,8 @@ class TestSite(unittest.TestCase):
     # def test_getlinks(self):
     #     site = Site('test_inputs/strana')
     #     site.getlinks()
-
-
+    #
+    #
 
 
     def test_articles(self):
